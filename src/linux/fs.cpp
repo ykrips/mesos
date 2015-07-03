@@ -31,6 +31,10 @@
 #include <stout/os/read.hpp>
 #include <stout/os/stat.hpp>
 
+#if defined(__PPC__) || defined(__powerpc__) || defined(__powerpc64__)
+#include <sys/syscall.h>
+#endif
+
 #include "linux/fs.hpp"
 
 using std::string;
