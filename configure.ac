@@ -891,6 +891,9 @@ __EOF__
     fi
   fi
 
+  # Determine if current JDK is IBMJDK or not.
+  test -f $JAVA_HOME/include/jniport.h; IS_IBMJDK=$?
+
   # Determine linker flags for Java if not set.
   if test "$OS_NAME" = "darwin"; then
     dir="$JAVA_HOME/jre/lib/server"
@@ -898,10 +901,17 @@ __EOF__
     JAVA_JVM_LIBRARY=$dir/libjvm.dylib
   elif test "$OS_NAME" = "linux"; then
     for arch in amd64 i386 arm aarch64 ppc64 ppc64le s390 s390x; do
-      dir="$JAVA_HOME/jre/lib/$arch/server"
+      if test "$IS_IBMJDK" = "1"; then
+        dir="$JAVA_HOME/jre/lib/$arch/server"
+      else
+        dir="$JAVA_HOME/jre/lib/$arch/compressedrefs"
+      fi
       if test -e "$dir"; then
 	# Note that these are libtool specific flags.
 	JAVA_TEST_LDFLAGS="-L$dir -R$dir -Wl,-ljvm"
+        if test "$IS_IBMJDK" = "0"; then
+          JAVA_TEST_LDFLAGS="$JAVA_TEST_LDFLAGS -ldl"
+        fi
 	JAVA_JVM_LIBRARY=$dir/libjvm.so
 	break;
       fi
