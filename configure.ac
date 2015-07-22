@@ -904,8 +904,9 @@ __EOF__
       if test "$IS_IBMJDK" = "1"; then
         dir="$JAVA_HOME/jre/lib/$arch/server"
       else
-        dir="$JAVA_HOME/jre/lib/$arch/compressedrefs"
+        dir="$JAVA_HOME/jre/lib/$arch/default"
       fi
+
       if test -e "$dir"; then
 	# Note that these are libtool specific flags.
 	JAVA_TEST_LDFLAGS="-L$dir -R$dir -Wl,-ljvm"
