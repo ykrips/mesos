@@ -102,7 +102,8 @@ template <typename T1, typename T2>
   const ::testing::AssertionResult result = AssertSome(actualExpr, actual);
 
   if (result) {
-    const ::testing::internal::FloatingPoint<T1> lhs(expected), rhs(actual.get());
+    const ::testing::internal::FloatingPoint<T1> lhs(expected),
+      rhs(actual.get());
     if (lhs.AlmostEquals(rhs)) {
       return ::testing::AssertionSuccess();
     } else {
