@@ -92,6 +92,31 @@ template <typename T1, typename T2>
   return result;
 }
 
+template <typename T1, typename T2>
+::testing::AssertionResult AssertSomeFloatingPointEq(
+    const char* expectedExpr,
+    const char* actualExpr,
+    const T1& expected,
+    const T2& actual)
+{
+  const ::testing::AssertionResult result = AssertSome(actualExpr, actual);
+
+  if (result) {
+    const ::testing::internal::FloatingPoint<T1> lhs(expected), rhs(actual.get());
+    if (lhs.AlmostEquals(rhs)) {
+      return ::testing::AssertionSuccess();
+    } else {
+      return ::testing::AssertionFailure()
+        << "Value of: (" << actualExpr << ").get()\n"
+        << "  Actual: " << ::testing::PrintToString(actual.get()) << "\n"
+        << "Expected: " << expectedExpr << "\n"
+        << "Which is: " << ::testing::PrintToString(expected);
+    }
+  }
+
+  return result;
+}
+
 
 template <typename T1, typename T2>
 ::testing::AssertionResult AssertSomeNe(
@@ -132,6 +157,22 @@ template <typename T1, typename T2>
 
 #define EXPECT_SOME_EQ(expected, actual)                \
   EXPECT_PRED_FORMAT2(AssertSomeEq, expected, actual)
+
+
+#define ASSERT_SOME_FLOAT_EQ(expected, actual)          \
+  ASSERT_PRED_FORMAT2(AssertSomeFloatingPointEq<float>, expected, actual)
+
+
+#define EXPECT_SOME_FLOAT_EQ(expected, actual)          \
+  EXPECT_PRED_FORMAT2(AssertSomeFloatingPointEq<float>, expected, actual)
+
+
+#define ASSERT_SOME_DOUBLE_EQ(expected, actual)         \
+  ASSERT_PRED_FORMAT2(AssertSomeFloatingPointEq<double>, expected, actual)
+
+
+#define EXPECT_SOME_DOUBLE_EQ(expected, actual)         \
+  EXPECT_PRED_FORMAT2(AssertSomeFloatingPointEq<double>, expected, actual)
 
 
 #define ASSERT_SOME_NE(notExpected, actual)             \
