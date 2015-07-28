@@ -44,7 +44,7 @@ TEST(ResourcesTest, Parsing)
   Resource cpus = Resources::parse("cpus", "45.55", "*").get();
 
   ASSERT_EQ(Value::SCALAR, cpus.type());
-  EXPECT_EQ(45.55, cpus.scalar().value());
+  EXPECT_DOUBLE_EQ(45.55, cpus.scalar().value());
 
   Resource ports = Resources::parse(
       "ports", "[10000-20000, 30000-50000]", "*").get();
@@ -140,7 +140,7 @@ TEST(ResourcesTest, Resources)
   Resources r = Resources::parse(
       "cpus:45.55;mem:1024;ports:[10000-20000, 30000-50000];disk:512").get();
 
-  EXPECT_SOME_EQ(45.55, r.cpus());
+  EXPECT_SOME_DOUBLE_EQ(45.55, r.cpus());
   EXPECT_SOME_EQ(Megabytes(1024), r.mem());
   EXPECT_SOME_EQ(Megabytes(512), r.disk());
 
@@ -153,7 +153,7 @@ TEST(ResourcesTest, Resources)
 
   r = Resources::parse("cpus:45.55;disk:512").get();
 
-  EXPECT_SOME_EQ(45.55, r.cpus());
+  EXPECT_SOME_DOUBLE_EQ(45.55, r.cpus());
   EXPECT_SOME_EQ(Megabytes(512), r.disk());
   EXPECT_TRUE(r.mem().isNone());
   EXPECT_TRUE(r.ports().isNone());

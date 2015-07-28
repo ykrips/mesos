@@ -67,7 +67,7 @@ TEST_F(PerfTest, Parse)
   ASSERT_TRUE(statistics.has_cycles());
   EXPECT_EQ(123u, statistics.cycles());
   ASSERT_TRUE(statistics.has_task_clock());
-  EXPECT_EQ(0.123, statistics.task_clock());
+  EXPECT_DOUBLE_EQ(0.123, statistics.task_clock());
 
   // Parse multiple cgroups.
   parse = perf::parse("123,cycles,cgroup1\n"
@@ -83,7 +83,7 @@ TEST_F(PerfTest, Parse)
   ASSERT_TRUE(statistics.has_cycles());
   EXPECT_EQ(123u, statistics.cycles());
   ASSERT_TRUE(statistics.has_task_clock());
-  EXPECT_EQ(0.123, statistics.task_clock());
+  EXPECT_DOUBLE_EQ(0.123, statistics.task_clock());
 
   ASSERT_TRUE(parse.get().contains("cgroup2"));
   statistics = parse.get().get("cgroup2").get();
@@ -91,7 +91,7 @@ TEST_F(PerfTest, Parse)
   ASSERT_TRUE(statistics.has_cycles());
   EXPECT_EQ(456u, statistics.cycles());
   EXPECT_TRUE(statistics.has_task_clock());
-  EXPECT_EQ(0.456, statistics.task_clock());
+  EXPECT_DOUBLE_EQ(0.456, statistics.task_clock());
 
   // Statistics reporting <not supported> should not appear.
   parse = perf::parse("<not supported>,cycles");
